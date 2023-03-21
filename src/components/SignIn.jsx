@@ -4,7 +4,21 @@ import TwitterLogo from '../../public/twitter-logo.svg';
 import Image from 'next/image';
 import QuiddleLogo from '../../public/quiddle-logo.svg';
 
+import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import app from '../utils/firebase';
+import { async } from '@firebase/util';
+
 const SignIn = () => {
+  const provider = new GoogleAuthProvider();
+  const firebaseAuth = getAuth(app);
+
+  const signInWithGoogle = async () => {
+    const {
+      user: { providerData },
+    } = await signInWithPopup(firebaseAuth, provider);
+    console.log(providerData);
+  };
+
   return (
     <div className="bg-[#0c1324] h-screen min-h-fit py-[8rem] lg:px-[5rem] ">
       <div className=" absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -44,7 +58,10 @@ const SignIn = () => {
         </button>
         <p className="text-white text-center my-2">Or</p>
         <div className="flex gap-7">
-          <button className="w-1/2 h-10 flex items-center gap-3 justify-center bg-[#fefefe]  font-medium rounded-md  ">
+          <button
+            type="button"
+            onClick={signInWithGoogle}
+            className="w-1/2 h-10 flex items-center gap-3 justify-center bg-[#fefefe]  font-medium rounded-md  ">
             <Image
               src={GoogleLogo}
               alt="Google Logo"
