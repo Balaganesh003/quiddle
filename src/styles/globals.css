@@ -36,6 +36,16 @@ svg text {
   }
 }
 
+@layer utilities {
+  .otp-input {
+    @apply px-4 py-2 m-1 text-2xl rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:outline-none text-center;
+  }
+
+  .otp-input:focus {
+    @apply border-blue-500;
+  }
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

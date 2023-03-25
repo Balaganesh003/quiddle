@@ -10,12 +10,12 @@ const Header = () => {
         <div className="w-full h-fit">
           <svg viewBox="0 0 2100 350">
             <text
-              class="text-[13rem] md:text-[22rem] lg:text-15xl"
+              className="text-[13rem] md:text-[22rem] lg:text-15xl"
               x="50%"
               y="50%"
               dy=".4em"
               fill="transparent"
-              text-anchor="middle">
+              textAnchor="middle">
               QUIDDLE
             </text>
           </svg>
@@ -24,7 +24,7 @@ const Header = () => {
         <h1 className="text-center uppercase ">
           Experience The Next Level of Words Game
         </h1>
-        <Link href="/signIn">
+        <Link href="/auth">
           <motion.button
             whileHover={{ scale: 1.2 }}
             whileTap={{ scale: 0.9 }}
