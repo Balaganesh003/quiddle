@@ -36,14 +36,31 @@ svg text {
   }
 }
 
-@layer utilities {
-  .otp-input {
-    @apply px-4 py-2 m-1 text-2xl rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:outline-none text-center;
-  }
+.otp-input {
+  font-size: 3rem;
+  width: 5rem !important;
+  height: 5rem;
+  padding-left: 10px;
+  padding-right: 10px;
+  text-transform: uppercase;
+  margin: 10px;
+  border: none;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px) !important;
+  border-radius: 10px;
+}
 
-  .otp-input:focus {
-    @apply border-blue-500;
-  }
+.otp-input:focus {
+  outline: none;
+  border: 1px solid white;
+}
+
+::selection {
+  background: none;
+  color: none;
 }
 
 @tailwind base;
