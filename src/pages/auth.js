@@ -26,10 +26,15 @@ const SignIn = () => {
   const [name, setName] = useState('');
 
   const signInWithGoogle = async () => {
-    const {
-      user: { providerData },
-    } = await signInWithPopup(firebaseAuth, provider);
-    console.log(providerData);
+    try {
+      const {
+        user: { providerData },
+      } = await signInWithPopup(firebaseAuth, provider);
+      router.push('/play');
+      console.log(providerData);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const signUpWithEmail = async (e) => {
