@@ -4,6 +4,38 @@
   box-sizing: border-box;
 }
 
+svg text {
+  stroke: #fff;
+  font-size: 180px;
+  font-weight: 700;
+  stroke-width: 3px;
+  animation: textAnimate 4s infinite alternate;
+}
+
+@keyframes textAnimate {
+  0% {
+    sfill: transparent;
+    stroke-dashoffset: 35%;
+    stroke-dasharray: 0 50%;
+    stroke-width: 3;
+  }
+  70% {
+    fill: transparent;
+
+    stroke-width: 3;
+  }
+  80% {
+    fill: transparent;
+    stroke-width: 3;
+  }
+  100% {
+    fill: transparent;
+    stroke-dashoffset: -35%;
+    stroke-dasharray: 50% 0;
+    stroke-width: 3;
+  }
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

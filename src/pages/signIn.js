@@ -6,7 +6,6 @@ import QuiddleLogo from '../../public/quiddle-logo.svg';
 
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import app from '../utils/firebase';
-import { async } from '@firebase/util';
 
 const SignIn = () => {
   const provider = new GoogleAuthProvider();
@@ -20,7 +19,7 @@ const SignIn = () => {
   };
 
   return (
-    <div className="bg-[#0c1324] h-screen min-h-fit py-[8rem] lg:px-[5rem] ">
+    <div className="bg-[#0c1324]  h-screen min-h-fit py-[8rem] lg:px-[5rem] ">
       <div className=" absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
         <div className="h-40 w-40 sm:h-56 sm:w-56 absolute  animate-pulse rounded-full bg-gradient-to-br from-blue-600 to-blue-400 sm:right-[3rem] -right-[1rem] bottom-[5rem]"></div>
         <div className="h-40 w-40 sm:h-56 sm:w-56 absolute animate-pulse rounded-full bg-gradient-to-r from-orange-500 to-yellow-400 sm:left-[3rem] -left-[1rem]  top-[5rem]"></div>
