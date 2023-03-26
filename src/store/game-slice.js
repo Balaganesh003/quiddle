@@ -12,6 +12,10 @@ const gameSlice = createSlice({
     reduceRemainingChance(state) {
       state.remainingChance--;
     },
+
+    resetRemainingChance(state) {
+      state.remainingChance = 5;
+    },
   },
 });
 

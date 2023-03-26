@@ -24,7 +24,7 @@ const Header = () => {
         <h1 className="text-center uppercase ">
           Experience The Next Level of Words Game
         </h1>
-        <Link href="/play">
+        <Link href="/auth">
           <motion.button
             whileHover={{ scale: 1.2 }}
             whileTap={{ scale: 0.9 }}
