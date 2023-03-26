@@ -5,6 +5,9 @@ import Image from 'next/image';
 import QuiddleLogo from '../../public/quiddle-logo.svg';
 import { useRouter } from 'next/router';
 
+import { useDispatch } from 'react-redux';
+import { authActions } from '@/store/auth-slice';
+
 import {
   getAuth,
   signInWithPopup,
@@ -19,19 +22,24 @@ const SignIn = () => {
   const router = useRouter();
   const provider = new GoogleAuthProvider();
   const firebaseAuth = getAuth(app);
-  const [user, setUser] = useState(null);
   const [signUp, setSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+
+  const dispatch = useDispatch();
+
+  const setUser = (user) => {
+    dispatch(authActions.setUser(user));
+  };
 
   const signInWithGoogle = async () => {
     try {
       const {
         user: { providerData },
       } = await signInWithPopup(firebaseAuth, provider);
+      setUser(providerData[0]);
       router.push('/play');
-      console.log(providerData);
     } catch (error) {
       console.log(error);
     }
@@ -40,17 +48,15 @@ const SignIn = () => {
   const signUpWithEmail = async (e) => {
     e.preventDefault();
     try {
-      const { user } = await createUserWithEmailAndPassword(
-        firebaseAuth,
-        email,
-        password
-      );
+      const {
+        user: { providerData },
+      } = await createUserWithEmailAndPassword(firebaseAuth, email, password);
       await updateProfile(firebaseAuth.currentUser, { displayName: name });
       setEmail('');
       setPassword('');
       setName('');
+      setUser(providerData[0]);
       router.push('/play');
-      console.log(user);
     } catch (error) {
       console.log(error);
     }
@@ -59,15 +65,13 @@ const SignIn = () => {
   const signInWithEmail = async (e) => {
     e.preventDefault();
     try {
-      const { user } = await signInWithEmailAndPassword(
-        firebaseAuth,
-        email,
-        password
-      );
+      const {
+        user: { providerData },
+      } = await signInWithEmailAndPassword(firebaseAuth, email, password);
       setEmail('');
       setPassword('');
+      setUser(providerData[0]);
       router.push('/play');
-      console.log(user);
     } catch (error) {
       console.log(error);
     }
