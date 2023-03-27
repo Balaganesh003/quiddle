@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import OtpInput from 'react-otp-input';
 import QuiddleLogo from '../../public/quiddle-logo.svg';
@@ -9,38 +9,71 @@ import { gameActions } from '@/store/game-slice';
 import { BiHelpCircle } from 'react-icons/bi';
 import RulesCard from '@/components/RulesCard';
 import ScoreCard from '@/components/ScoreCard';
+import selectWord from '@/utils/selectWord';
 
 const Play = () => {
   const dispatch = useDispatch();
-  const { remainingChance } = useSelector((state) => state.game);
+
+  const handelChooseWord = () => {
+    const word = selectWord();
+    dispatch(gameActions.setChoosedWord(word));
+  };
+
+  useEffect(() => {
+    handelChooseWord();
+  }, []);
+
+  const { remainingChance, choosedWord } = useSelector((state) => state.game);
+
   const [guessword, setGuessword] = useState('');
   const [isGuessing, setIsGuessing] = useState(true);
   const [isWon, setIsWon] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
   const { name } = useSelector((state) => state.auth);
-  const ChoosedWord = 'Wood'.toLocaleLowerCase();
   const [correctLetters, setCorrectLetters] = useState(0);
   const [correctLettersWithPosition, setCorrectLettersWithPosition] =
     useState(0);
 
+  const AddGuessedWord = (
+    guessword,
+    correctLetters,
+    correctLettersWithPosition
+  ) => {
+    dispatch(
+      gameActions.addGuessedWord({
+        guessedWord: guessword,
+        letterInPosition: correctLettersWithPosition,
+        letterNotInPosition: correctLetters,
+      })
+    );
+  };
+
+  const handleEndGame = () => {
+    setIsGuessing(false);
+    dispatch(gameActions.resetRemainingChance());
+    dispatch(gameActions.resetGuessedWords());
+    dispatch(gameActions.resetChooseWord());
+  };
+
+  useEffect(() => {}, [isGuessing]);
+
   const checkWord = (word) => {
-    if (word === ChoosedWord) {
-      setIsGuessing(false);
-      setCorrectLettersWithPosition(ChoosedWord.length);
-      dispatch(gameActions.resetRemainingChance());
-      setIsWon(true);
-    } else {
-      let correctLetters = 0;
-      let correctLettersWithPosition = 0;
-      for (let i = 0; i < word.length; i++) {
-        if (ChoosedWord.includes(word[i])) {
-          if (ChoosedWord[i] === word[i]) {
-            correctLettersWithPosition++;
-          } else {
-            correctLetters++;
-          }
+    let correctLetters = 0;
+    let correctLettersWithPosition = 0;
+    for (let i = 0; i < word.length; i++) {
+      if (choosedWord.includes(word[i])) {
+        if (choosedWord[i] === word[i]) {
+          correctLettersWithPosition++;
+        } else {
+          correctLetters++;
         }
       }
+    }
+    if (correctLettersWithPosition === choosedWord.length) {
+      handleEndGame();
+      setIsWon(true);
+    } else {
+      AddGuessedWord(guessword, correctLetters, correctLettersWithPosition);
       setCorrectLetters(correctLetters);
       setCorrectLettersWithPosition(correctLettersWithPosition);
       dispatch(gameActions.reduceRemainingChance());
@@ -49,9 +82,10 @@ const Play = () => {
 
   const handleGuess = (e) => {
     e.preventDefault();
-    if (remainingChance === 1) setIsGuessing(false);
-
     checkWord(guessword.toLocaleLowerCase());
+    if (remainingChance === 1) {
+      handleEndGame();
+    }
     setGuessword('');
   };
 
@@ -112,7 +146,7 @@ const Play = () => {
           {/* Guessed List */}
           <ScoreCard
             remainingChance={remainingChance}
-            ChoosedWord={ChoosedWord}
+            ChoosedWord={choosedWord}
             correctLetters={correctLetters}
             correctLettersWithPosition={correctLettersWithPosition}
           />
