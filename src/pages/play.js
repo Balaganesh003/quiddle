@@ -91,7 +91,7 @@ const Play = () => {
 
   return (
     <div
-      className="bg-[url('../../public/bg.webp')]  bg-no-repeat bg-cover w-full h-screen  text-black py-[5rem] px-[8rem]
+      className="bg-[url('../../public/bg.webp')]  bg-no-repeat bg-cover w-full h-screen  text-black lg:py-[3rem] lg:px-[5rem]  2xl:py-[5rem] 2xl:px-[8rem]
     ">
       <div className="bg-black/10 px-10  text-white rounded-lg py-5 h-full w-full  relative">
         <div className="flex justify-between  items-center w-full">
@@ -139,7 +139,7 @@ const Play = () => {
 
             <button
               onClick={(e) => handleGuess(e)}
-              className="bg-white/20 px-8 text-xl py-3 text-[#4f46e5] font-medium rounded-md hover:bg-gray-200 transition-colors mt-10">
+              className="hover:bg-white transition-all duration-200 px-8 text-xl py-3 text-[#4f46e5] font-medium rounded-md bg-gray-100/80  mt-10">
               Submit
             </button>
           </div>
