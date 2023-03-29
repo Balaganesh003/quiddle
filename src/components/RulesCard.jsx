@@ -14,22 +14,23 @@ const RulesCard = ({ setIsRulesOpen }) => {
       </div>
       <div className="px-2  flex h-[calc(100%-3rem)] flex-col gap-2 scrollbar-hide overflow-y-scroll">
         <p className="text-white/70 text-base tracking-tight">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis
+          The computer chooses a four-letter word.
         </p>
         <p className="text-white/70 text-base tracking-tight">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis
+          The player makes a guess by entering a four-letter word.
         </p>
         <p className="text-white/70 text-base tracking-tight">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis
+          The computer responds with the number of wrong❌ and ticks✅ in the
+          guess.
         </p>
         <p className="text-white/70 text-base tracking-tight">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis
+          A ❌ means that a letter in the guess is in the correct position,
+          while a ✅ means that a letter in the guess is present in the
+          computers word, but in the wrong position.
         </p>
         <p className="text-white/70 text-base tracking-tight">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis
-        </p>
-        <p className="text-white/70 text-base tracking-tight">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis
+          The player continues to make guesses until they correctly guess the
+          computers word, or until they run out of guesses.
         </p>
       </div>
     </div>
