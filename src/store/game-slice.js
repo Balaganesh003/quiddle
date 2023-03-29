@@ -7,7 +7,7 @@ const gameSlice = createSlice({
     gameStatus: 'idle',
     choosedWord: 'wood',
     gameError: null,
-    remainingChance: 5,
+    remainingChance: 15,
     guessedWords: [],
   },
   reducers: {
@@ -16,7 +16,7 @@ const gameSlice = createSlice({
     },
 
     resetRemainingChance(state) {
-      state.remainingChance = 5;
+      state.remainingChance = 15;
     },
     addGuessedWord(state, action) {
       state.guessedWords.unshift(action.payload);
