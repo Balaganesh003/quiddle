@@ -8,7 +8,7 @@ const GuessedCard = ({
   correctLettersWithPosition,
 }) => {
   return (
-    <div className="flex rounded-lg justify-between  mx-4 my-3 px-4 py-3 bg-black/30">
+    <div className="flex rounded-lg justify-between text-white mx-4 my-3 px-4 py-3 bg-black/30">
       <p className="uppercase xl:text-xl text-base xl:tracking-widest">
         {ChoosedWord}
       </p>

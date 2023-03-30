@@ -6,7 +6,7 @@ const ScoreCard = () => {
   const { guessedWords, remainingChance } = useSelector((state) => state.game);
 
   return (
-    <div className="m-5 rounded-lg w-[20%] h-[50%] overflow-y-hidden bg-black/20 absolute bottom-0 right-0">
+    <div className="sm:m-5 h-3/5 rounded-lg w-[90%] z-[50] bg-black/10  sm:w-[20%] sm:h-[50%] overflow-y-hidden  absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 sm:bottom-0 sm:right-0 ">
       <div className="flex justify-between rounded-t-lg  px-4 py-3 bg-black/[35%]">
         <p className="xl:text-xl text-base text-white">Remaining Chance</p>
         <p className="Xl:text-xl flex items-center font-bold text-white">

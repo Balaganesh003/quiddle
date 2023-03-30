@@ -3,7 +3,7 @@ import { AiOutlineCloseCircle } from 'react-icons/ai';
 
 const RulesCard = ({ setIsRulesOpen }) => {
   return (
-    <div className="m-5 rounded-lg w-[20%]  pb-4 h-[50%] bg-black/20  absolute bottom-0 left-0 ">
+    <div className="m-5 rounded-lg w-[20%] overflow-hidden pb-4 h-[50%] bg-black/20  absolute bottom-0 left-0 ">
       <div className="text-center  rounded-t-lg mb-2 px-2 py-3 uppercase relative bg-black/[15%]">
         <p>Rules</p>
         <p

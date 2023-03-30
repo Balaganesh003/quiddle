@@ -91,76 +91,80 @@ const Play = () => {
 
   return (
     <div
-      className="bg-[url('../../public/bg.webp')]  bg-no-repeat bg-cover w-full h-screen  text-black lg:py-[3rem] lg:px-[5rem]  2xl:py-[5rem] 2xl:px-[8rem]
+      className="bg-[url('../../public/bg.webp')]  bg-no-repeat bg-cover w-full h-screen  text-black px-[1.5rem] py-[2.5rem] lg:py-[3rem] lg:px-[5rem]  2xl:py-[5rem] 2xl:px-[8rem]
     ">
-      <div className="bg-black/10 px-10  text-white rounded-lg py-5 h-full w-full  relative">
-        <div className="flex justify-between  items-center w-full">
-          <Image
-            src={QuiddleLogo}
-            alt="logo"
-            className=" w-[15rem]  rounded-full"
-          />
-          <p className="text-2xl">Welcome {name}</p>
-        </div>
-        <div className="">
-          <div className="flex h-full flex-col items-center">
-            <h1 className="text-4xl font-bold text-white pb-10">
-              Guess the word
-            </h1>
-            <OtpInput
-              value={guessword}
-              onChange={setGuessword}
-              numInputs={4}
-              renderInput={(props) => <input {...props} />}
-              inputType="string"
-              inputStyle={'otp-input'}
+      <div className="relative h-full ">
+        <div className="bg-black/10 sm:px-10 p-4  text-white rounded-lg py-5 h-full blur-md">
+          <div className="flex justify-between items-center w-full">
+            <Image
+              src={QuiddleLogo}
+              alt="logo"
+              className="w-[5rem] hidden sm:block shadow-xl sm:w-[15rem]  rounded-full"
             />
+            <p className="text-2xl">Welcome {name}</p>
 
-            {!isGuessing ? (
-              <p className="mt-4 text-[#4f46e5] font-medium">
-                {isWon ? 'Won the Game😇😇' : 'Lost the game😭😭'}
-              </p>
+            <p className="sm:hidden text-[1.5rem]">❤️{remainingChance}</p>
+          </div>
+          <div className="">
+            <div className="flex h-full flex-col items-center">
+              <h1 className="text-4xl font-bold text-white pb-10">
+                Guess the word
+              </h1>
+              <OtpInput
+                value={guessword}
+                onChange={setGuessword}
+                numInputs={4}
+                renderInput={(props) => <input {...props} />}
+                inputType="string"
+                inputStyle={'otp-input'}
+              />
+
+              {!isGuessing ? (
+                <p className="mt-4 text-[#4f46e5] font-medium">
+                  {isWon ? 'Won the Game😇😇' : 'Lost the game😭😭'}
+                </p>
+              ) : (
+                <div className="flex gap-5 mt-4">
+                  <div className="flex items-center justify-center">
+                    <RiCloseLine className="text-[2rem]" />
+                    <p className="text-2xl font-bold text-white ">
+                      {correctLetters}
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <TiTickOutline className="text-[2rem]" />
+                    <p className="text-2xl font-bold text-white ">
+                      {correctLettersWithPosition}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <button
+                onClick={(e) => handleGuess(e)}
+                className="hover:bg-white transition-all duration-200 px-8 text-xl py-3 text-[#4f46e5] font-medium rounded-md bg-gray-100/80  mt-10">
+                Submit
+              </button>
+            </div>
+            {/* Guessed List */}
+
+            {isRulesOpen ? (
+              <RulesCard setIsRulesOpen={setIsRulesOpen} />
             ) : (
-              <div className="flex gap-5 mt-4">
-                <div className="flex items-center justify-center">
-                  <RiCloseLine className="text-[2rem]" />
-                  <p className="text-2xl font-bold text-white ">
-                    {correctLetters}
-                  </p>
-                </div>
-                <div className="flex items-center justify-center">
-                  <TiTickOutline className="text-[2rem]" />
-                  <p className="text-2xl font-bold text-white ">
-                    {correctLettersWithPosition}
-                  </p>
-                </div>
+              <div
+                onClick={() => setIsRulesOpen(true)}
+                className="absolute bottom-0 left-0 m-4 cursor-pointer rounded-full">
+                <BiHelpCircle className="text-white   text-[3rem]" />
               </div>
             )}
-
-            <button
-              onClick={(e) => handleGuess(e)}
-              className="hover:bg-white transition-all duration-200 px-8 text-xl py-3 text-[#4f46e5] font-medium rounded-md bg-gray-100/80  mt-10">
-              Submit
-            </button>
           </div>
-          {/* Guessed List */}
-          <ScoreCard
-            remainingChance={remainingChance}
-            ChoosedWord={choosedWord}
-            correctLetters={correctLetters}
-            correctLettersWithPosition={correctLettersWithPosition}
-          />
-
-          {isRulesOpen ? (
-            <RulesCard setIsRulesOpen={setIsRulesOpen} />
-          ) : (
-            <div
-              onClick={() => setIsRulesOpen(true)}
-              className="absolute bottom-0 left-0 m-4 cursor-pointer rounded-full">
-              <BiHelpCircle className="text-white   text-[3rem]" />
-            </div>
-          )}
         </div>
+        <ScoreCard
+          remainingChance={remainingChance}
+          ChoosedWord={choosedWord}
+          correctLetters={correctLetters}
+          correctLettersWithPosition={correctLettersWithPosition}
+        />
       </div>
     </div>
   );
