@@ -4,15 +4,6 @@
   box-sizing: border-box;
 }
 
-#gradient-canvas {
-  width: 100%;
-  height: 100vh;
-  --gradient-color-1: #043d5d;
-  --gradient-color-2: #032e46;
-  --gradient-color-3: #23b684;
-  --gradient-color-4: #0f595e;
-}
-
 svg text {
   stroke: #fff;
   font-size: 180px;
@@ -72,12 +63,23 @@ svg text {
   color: none;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 640px) {
   .otp-input {
     width: 3rem !important;
     height: 3rem;
     font-size: 1.5rem;
   }
+}
+
+@font-face {
+  font-family: 'Cheque';
+  font-style: normal;
+  font-weight: 500;
+  src: url(/public/fonts/Cheque-Regular.otf) format('truetype');
+}
+
+.quiddle {
+  font-family: 'Cheque', sans-serif;
 }
 
 @tailwind base;

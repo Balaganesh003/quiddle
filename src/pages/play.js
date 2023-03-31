@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import OtpInput from 'react-otp-input';
-import QuiddleLogo from '../../public/quiddle-logo.svg';
 import { TiTickOutline } from 'react-icons/ti';
 import { RiCloseLine } from 'react-icons/ri';
 import { useSelector, useDispatch } from 'react-redux';
@@ -10,6 +9,7 @@ import { BiHelpCircle } from 'react-icons/bi';
 import RulesCard from '@/components/RulesCard';
 import ScoreCard from '@/components/ScoreCard';
 import selectWord from '@/utils/selectWord';
+import toast, { Toaster } from 'react-hot-toast';
 
 const Play = () => {
   const dispatch = useDispatch();
@@ -58,7 +58,7 @@ const Play = () => {
 
   useEffect(() => {}, [isGuessing]);
 
-  const checkWord = (word) => {
+  const checkWord = (word, loading) => {
     let correctLetters = 0;
     let correctLettersWithPosition = 0;
     for (let i = 0; i < word.length; i++) {
@@ -72,6 +72,7 @@ const Play = () => {
     }
     if (correctLettersWithPosition === choosedWord.length) {
       handleEndGame();
+      toast.success('You Won the Game');
       setIsWon(true);
     } else {
       AddGuessedWord(guessword, correctLetters, correctLettersWithPosition);
@@ -83,6 +84,10 @@ const Play = () => {
 
   const handleGuess = (e) => {
     e.preventDefault();
+    if (guessword.length !== 4) {
+      toast.error('Please enter 4 letter word');
+      return;
+    }
     checkWord(guessword.toLocaleLowerCase());
     if (remainingChance === 1) {
       handleEndGame();
@@ -95,17 +100,19 @@ const Play = () => {
       className="bg-[url('../../public/bg.webp')]  bg-no-repeat bg-cover w-full h-screen  text-black px-[1.5rem] py-[2.5rem] lg:py-[3rem] lg:px-[5rem]  2xl:py-[5rem] 2xl:px-[8rem]
     ">
       <div className="relative h-full ">
+        <Toaster />
         <div
           className={`bg-black/10 sm:px-10 p-4  text-white rounded-lg py-5 h-full ${
-            isGuessedCardOpen && 'blur-md'
+            (isGuessedCardOpen && 'blur-md') ||
+            (isRulesOpen && 'blur-md sm:blur-0')
           } `}>
           <div className="flex justify-between items-center w-full">
-            <Image
-              src={QuiddleLogo}
-              alt="logo"
-              className="w-[5rem] hidden sm:block  sm:w-[15rem]  rounded-full"
-            />
-            <p className="text-2xl">Welcome {name}</p>
+            <p className="text-[2rem] sm:text-[3rem] uppercase quiddle">
+              Quiddle
+            </p>
+            <p className="text-2xl hidden sm:block">
+              Welcome <span>{name}</span>
+            </p>
 
             <p
               onClick={(e) => setIsGuessedCardOpen(true)}
@@ -113,7 +120,7 @@ const Play = () => {
               ❤️{remainingChance}
             </p>
           </div>
-          <div className="h-[calc(100%-5rem)] sm:h-auto  flex items-center">
+          <div className="h-[calc(100%-5rem)] sm:h-auto sm:mt-5 flex items-center">
             <div className="flex h-full w-full flex-col items-center justify-center">
               <h1 className="sm:text-4xl text-3xl font-bold text-white pb-5 sm:pb-10">
                 Guess the word
@@ -128,7 +135,7 @@ const Play = () => {
               />
 
               {!isGuessing ? (
-                <p className="mt-4 text-[#4f46e5] font-medium">
+                <p className="mt-4 text-[#4f46e5]   font-medium text-2xl ">
                   {isWon ? 'Won the Game😇😇' : 'Lost the game😭😭'}
                 </p>
               ) : (
@@ -156,9 +163,7 @@ const Play = () => {
             </div>
             {/* Guessed List */}
 
-            {isRulesOpen ? (
-              <RulesCard setIsRulesOpen={setIsRulesOpen} />
-            ) : (
+            {!isRulesOpen && (
               <div
                 onClick={() => setIsRulesOpen(true)}
                 className="absolute bottom-0 left-0 m-4 cursor-pointer rounded-full">
@@ -167,6 +172,8 @@ const Play = () => {
             )}
           </div>
         </div>
+
+        <RulesCard isRulesOpen={isRulesOpen} setIsRulesOpen={setIsRulesOpen} />
         <ScoreCard
           isGuessedCardOpen={isGuessedCardOpen}
           setIsGuessedCardOpen={setIsGuessedCardOpen}
