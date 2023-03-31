@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { Gradient } from './Gradient.js';
 
 const Header = () => {
+  const gradient = new Gradient();
+  useEffect(() => {
+    gradient.initGradient('#gradient-canvas');
+  }, []);
   return (
-    <div className="bg-[#0c1324] px-4 text-white h-screen min-h-fit py-[1rem] lg:px-[5rem]">
-      <div className="h-full w-full flex flex-col items-center  justify-center">
-        <h1 className="text-center uppercase ">Word Game Like Never Before</h1>
+    <div className=" px-4 absolute w-full  bg-[#0c1324] text-white h-screen min-h-fit py-[1rem] lg:px-[5rem]">
+      <div className="h-full  w-full flex flex-col items-center  justify-center">
+        <h1 className="text-center uppercase text-white  ">
+          Word Game Like Never Before
+        </h1>
         <div className="w-full h-fit hidden sm:block">
           <svg viewBox="0 0 2100 400 ">
             <text

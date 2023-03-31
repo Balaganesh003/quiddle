@@ -33,6 +33,7 @@ const Play = () => {
   const [correctLetters, setCorrectLetters] = useState(0);
   const [correctLettersWithPosition, setCorrectLettersWithPosition] =
     useState(0);
+  const [isGuessedCardOpen, setIsGuessedCardOpen] = useState(false);
 
   const AddGuessedWord = (
     guessword,
@@ -94,20 +95,27 @@ const Play = () => {
       className="bg-[url('../../public/bg.webp')]  bg-no-repeat bg-cover w-full h-screen  text-black px-[1.5rem] py-[2.5rem] lg:py-[3rem] lg:px-[5rem]  2xl:py-[5rem] 2xl:px-[8rem]
     ">
       <div className="relative h-full ">
-        <div className="bg-black/10 sm:px-10 p-4  text-white rounded-lg py-5 h-full blur-md">
+        <div
+          className={`bg-black/10 sm:px-10 p-4  text-white rounded-lg py-5 h-full ${
+            isGuessedCardOpen && 'blur-md'
+          } `}>
           <div className="flex justify-between items-center w-full">
             <Image
               src={QuiddleLogo}
               alt="logo"
-              className="w-[5rem] hidden sm:block shadow-xl sm:w-[15rem]  rounded-full"
+              className="w-[5rem] hidden sm:block  sm:w-[15rem]  rounded-full"
             />
             <p className="text-2xl">Welcome {name}</p>
 
-            <p className="sm:hidden text-[1.5rem]">❤️{remainingChance}</p>
+            <p
+              onClick={(e) => setIsGuessedCardOpen(true)}
+              className="sm:hidden text-[1.5rem]">
+              ❤️{remainingChance}
+            </p>
           </div>
-          <div className="">
-            <div className="flex h-full flex-col items-center">
-              <h1 className="text-4xl font-bold text-white pb-10">
+          <div className="h-[calc(100%-5rem)] sm:h-auto  flex items-center">
+            <div className="flex h-full w-full flex-col items-center justify-center">
+              <h1 className="sm:text-4xl text-3xl font-bold text-white pb-5 sm:pb-10">
                 Guess the word
               </h1>
               <OtpInput
@@ -160,10 +168,8 @@ const Play = () => {
           </div>
         </div>
         <ScoreCard
-          remainingChance={remainingChance}
-          ChoosedWord={choosedWord}
-          correctLetters={correctLetters}
-          correctLettersWithPosition={correctLettersWithPosition}
+          isGuessedCardOpen={isGuessedCardOpen}
+          setIsGuessedCardOpen={setIsGuessedCardOpen}
         />
       </div>
     </div>
