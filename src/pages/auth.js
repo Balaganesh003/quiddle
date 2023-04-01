@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import GoogleLogo from '../../public/google-icon.svg';
 import TwitterLogo from '../../public/twitter-logo.svg';
 import Image from 'next/image';
-import QuiddleLogo from '../../public/quiddle-logo.svg';
 import { useRouter } from 'next/router';
-
 import { useDispatch } from 'react-redux';
 import { authActions } from '@/store/auth-slice';
 
@@ -85,7 +83,9 @@ const SignIn = () => {
       </div>
       <form className="sm:w-[24rem] w-[90%]  bg-opacity-25 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-xl backdrop-blur-lg border-2 border-white border-opacity-10 shadow-lg py-8 px-7">
         <div className="text-white flex items-center mx-auto w-[15rem] justify-center mb-4">
-          <Image src={QuiddleLogo} alt="logo" className="" />
+          <p className="text-[2rem] sm:text-[3rem] uppercase quiddle">
+            Quiddle
+          </p>
         </div>
         {!signUp && (
           <h3 className="text-base font-medium text-white/80 text-center mb-8">
