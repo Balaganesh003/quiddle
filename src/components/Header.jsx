@@ -1,13 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Gradient } from './Gradient.js';
 
 const Header = () => {
-  const gradient = new Gradient();
-  useEffect(() => {
-    gradient.initGradient('#gradient-canvas');
-  }, []);
   return (
     <div className=" px-4 absolute w-full  bg-[#0c1324] text-white h-screen min-h-fit py-[1rem] lg:px-[5rem]">
       <div className="h-full  w-full flex flex-col items-center  justify-center">

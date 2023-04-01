@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
 import OtpInput from 'react-otp-input';
 import { TiTickOutline } from 'react-icons/ti';
 import { RiCloseLine } from 'react-icons/ri';
