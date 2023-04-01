@@ -19,9 +19,9 @@ const Play = () => {
     dispatch(gameActions.setChoosedWord(word));
   };
 
-  // useEffect(() => {
-  //   handelChooseWord();
-  // }, []);
+  useEffect(() => {
+    handelChooseWord();
+  }, []);
 
   const { remainingChance, choosedWord } = useSelector((state) => state.game);
 
