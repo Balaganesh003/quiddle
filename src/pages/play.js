@@ -134,9 +134,19 @@ const Play = () => {
               />
 
               {!isGuessing ? (
-                <p className="mt-4 text-[#4f46e5]   font-medium text-2xl ">
-                  {isWon ? 'Won the Game😇😇' : 'Lost the game😭😭'}
-                </p>
+                <>
+                  <p className="mt-4 font-medium text-2xl ">
+                    {isWon ? 'Won the Game😇😇' : `Lost the game😭😭`}
+                  </p>
+                  {!isWon && (
+                    <p className="mt-2 text-white/70  font-medium text-xl ">
+                      The word was
+                      <span className="text-2xl ml-2  uppercase text-white underline">
+                        {choosedWord}
+                      </span>
+                    </p>
+                  )}
+                </>
               ) : (
                 <div className="flex gap-5 mt-4">
                   <div className="flex items-center justify-center">
