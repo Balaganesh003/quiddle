@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { authActions } from '@/store/auth-slice';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '../utils/firebase';
 
 import {
   getAuth,
@@ -36,6 +38,14 @@ const SignIn = () => {
       const {
         user: { providerData },
       } = await signInWithPopup(firebaseAuth, provider);
+
+      await setDoc(doc(db, 'users', providerData[0].uid), {
+        name: providerData[0].displayName,
+        email: providerData[0].email,
+        photo: providerData[0].photoURL,
+        words: [],
+      });
+
       setUser(providerData[0]);
       router.push('/play');
     } catch (error) {
@@ -53,6 +63,12 @@ const SignIn = () => {
       setEmail('');
       setPassword('');
       setName('');
+      await setDoc(doc(db, 'users', providerData[0].uid), {
+        name: providerData[0].displayName,
+        email: providerData[0].email,
+        photo: providerData[0].photoURL,
+        words: [],
+      });
       setUser(providerData[0]);
       router.push('/play');
     } catch (error) {

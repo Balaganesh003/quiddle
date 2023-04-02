@@ -9,6 +9,16 @@ import RulesCard from '@/components/RulesCard';
 import ScoreCard from '@/components/ScoreCard';
 import selectWord from '@/utils/selectWord';
 import toast, { Toaster } from 'react-hot-toast';
+import { db } from '../utils/firebase';
+
+import {
+  doc,
+  collection,
+  query,
+  where,
+  onSnapshot,
+  setDoc,
+} from 'firebase/firestore';
 
 const Play = () => {
   const dispatch = useDispatch();
@@ -24,6 +34,8 @@ const Play = () => {
 
   const { remainingChance, choosedWord } = useSelector((state) => state.game);
 
+  const { user } = useSelector((state) => state.auth);
+
   const [guessword, setGuessword] = useState('');
   const [isGuessing, setIsGuessing] = useState(true);
   const [isWon, setIsWon] = useState(false);
@@ -33,6 +45,7 @@ const Play = () => {
   const [correctLettersWithPosition, setCorrectLettersWithPosition] =
     useState(0);
   const [isGuessedCardOpen, setIsGuessedCardOpen] = useState(false);
+  let AlreadyGuessedWords = [];
 
   const AddGuessedWord = (
     guessword,
@@ -57,7 +70,7 @@ const Play = () => {
 
   useEffect(() => {}, [isGuessing]);
 
-  const checkWord = (word, loading) => {
+  const checkWord = async (word) => {
     let correctLetters = 0;
     let correctLettersWithPosition = 0;
     for (let i = 0; i < word.length; i++) {
@@ -71,7 +84,27 @@ const Play = () => {
     }
     if (correctLettersWithPosition === choosedWord.length) {
       handleEndGame();
+      const q = query(
+        collection(db, 'users'),
+        where('email', '==', user.email)
+      );
+      const querySnapshot = onSnapshot(q, (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          AlreadyGuessedWords.push(doc.data().words);
+        });
+      });
+
+      querySnapshot();
+
+      await setDoc(doc(db, 'users', user.uid), {
+        name: user.displayName,
+        email: user.email,
+        photo: user.photoURL,
+        words: [...AlreadyGuessedWords, choosedWord],
+      });
+
       toast.success('You Won the Game');
+
       setIsWon(true);
     } else {
       AddGuessedWord(guessword, correctLetters, correctLettersWithPosition);
