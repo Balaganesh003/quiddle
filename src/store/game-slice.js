@@ -3,11 +3,10 @@ import { createSlice } from '@reduxjs/toolkit';
 const gameSlice = createSlice({
   name: 'game',
   initialState: {
-    game: null,
-    gameStatus: 'idle',
-    choosedWord: 'wood',
+    choosedWord: '',
     gameError: null,
     remainingChance: 15,
+    alreadyPlayedWords: [],
     guessedWords: [],
   },
   reducers: {
@@ -29,6 +28,9 @@ const gameSlice = createSlice({
     },
     resetChooseWord(state) {
       state.choosedWord = '';
+    },
+    setAlreadyPlayedWords(state, action) {
+      state.alreadyPlayedWords = action.payload;
     },
   },
 });

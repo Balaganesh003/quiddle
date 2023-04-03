@@ -39,12 +39,15 @@ const SignIn = () => {
         user: { providerData },
       } = await signInWithPopup(firebaseAuth, provider);
 
-      await setDoc(doc(db, 'users', providerData[0].uid), {
-        name: providerData[0].displayName,
-        email: providerData[0].email,
-        photo: providerData[0].photoURL,
-        words: [],
-      });
+      await setDoc(
+        doc(db, 'users', providerData[0].uid),
+        {
+          name: providerData[0].displayName,
+          email: providerData[0].email,
+          photo: providerData[0].photoURL,
+        },
+        { merge: true }
+      );
 
       setUser(providerData[0]);
       router.push('/play');
