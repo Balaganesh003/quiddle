@@ -91,7 +91,7 @@ const Play = () => {
     setIsGuessing(false);
     dispatch(gameActions.resetRemainingChance());
     dispatch(gameActions.resetGuessedWords());
-    dispatch(gameActions.resetChooseWord());
+    // dispatch(gameActions.resetChooseWord());
   };
 
   const checkWord = async (word) => {
