@@ -10,27 +10,12 @@ import ScoreCard from '@/components/ScoreCard';
 import selectWord from '@/utils/selectWord';
 import toast, { Toaster } from 'react-hot-toast';
 import { db } from '../utils/firebase';
-
-import {
-  doc,
-  collection,
-  query,
-  where,
-  onSnapshot,
-  setDoc,
-} from 'firebase/firestore';
+import { useRouter } from 'next/router';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 
 const Play = () => {
   const dispatch = useDispatch();
-
-  const handelChooseWord = () => {
-    const word = selectWord();
-    dispatch(gameActions.setChoosedWord(word));
-  };
-
-  useEffect(() => {
-    handelChooseWord();
-  }, []);
+  const router = useRouter();
 
   const { remainingChance, choosedWord } = useSelector((state) => state.game);
 
@@ -45,7 +30,48 @@ const Play = () => {
   const [correctLettersWithPosition, setCorrectLettersWithPosition] =
     useState(0);
   const [isGuessedCardOpen, setIsGuessedCardOpen] = useState(false);
-  let AlreadyGuessedWords = [];
+  const { alreadyPlayedWords } = useSelector((state) => state.game);
+  const { isAuthenticated } = useSelector((state) => state.auth);
+
+  const checkUserAuth = () => {
+    if (!isAuthenticated) {
+      router.push('/auth');
+    }
+  };
+
+  const getAlreadyPlayedWords = async () => {
+    let alreadyPlayedWords = [];
+    try {
+      const docRef = doc(db, 'users', user.uid);
+      const docSnap = await getDoc(docRef);
+      if (
+        docSnap.data().words === undefined ||
+        docSnap.data().words.length === 0
+      )
+        return;
+      await docSnap.data().words.forEach((word) => {
+        alreadyPlayedWords.push(word);
+      });
+      dispatch(gameActions.setAlreadyPlayedWords(alreadyPlayedWords));
+    } catch (error) {
+      toast.error('Something went wrong');
+    }
+  };
+
+  useEffect(() => {
+    checkUserAuth();
+    getAlreadyPlayedWords();
+    handelChooseWord();
+  }, [isWon]);
+
+  const handelChooseWord = () => {
+    const word = selectWord();
+    if (alreadyPlayedWords.includes(word)) {
+      handelChooseWord();
+    } else {
+      dispatch(gameActions.setChoosedWord(word));
+    }
+  };
 
   const AddGuessedWord = (
     guessword,
@@ -65,10 +91,8 @@ const Play = () => {
     setIsGuessing(false);
     dispatch(gameActions.resetRemainingChance());
     dispatch(gameActions.resetGuessedWords());
-    dispatch(gameActions.resetChooseWord());
+    // dispatch(gameActions.resetChooseWord());
   };
-
-  useEffect(() => {}, [isGuessing]);
 
   const checkWord = async (word) => {
     let correctLetters = 0;
@@ -84,24 +108,14 @@ const Play = () => {
     }
     if (correctLettersWithPosition === choosedWord.length) {
       handleEndGame();
-      const q = query(
-        collection(db, 'users'),
-        where('email', '==', user.email)
+
+      await setDoc(
+        doc(db, 'users', user.uid),
+        {
+          words: [...alreadyPlayedWords, choosedWord],
+        },
+        { merge: true }
       );
-      const querySnapshot = onSnapshot(q, (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          AlreadyGuessedWords.push(doc.data().words);
-        });
-      });
-
-      querySnapshot();
-
-      await setDoc(doc(db, 'users', user.uid), {
-        name: user.displayName,
-        email: user.email,
-        photo: user.photoURL,
-        words: [...AlreadyGuessedWords, choosedWord],
-      });
 
       toast.success('You Won the Game');
 

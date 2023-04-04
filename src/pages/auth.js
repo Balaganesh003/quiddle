@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import GoogleLogo from '../../public/google-icon.svg';
-import TwitterLogo from '../../public/twitter-logo.svg';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { authActions } from '@/store/auth-slice';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { db } from '../utils/firebase';
 
 import {
@@ -39,6 +38,15 @@ const SignIn = () => {
         user: { providerData },
       } = await signInWithPopup(firebaseAuth, provider);
 
+      const docRef = doc(db, 'users', providerData[0].uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        setUser(providerData[0]);
+        router.push('/play');
+        return;
+      }
+
       await setDoc(doc(db, 'users', providerData[0].uid), {
         name: providerData[0].displayName,
         email: providerData[0].email,
@@ -63,12 +71,21 @@ const SignIn = () => {
       setEmail('');
       setPassword('');
       setName('');
+      const docRef = doc(db, 'users', providerData[0].uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        setUser(providerData[0]);
+        router.push('/play');
+        return;
+      }
       await setDoc(doc(db, 'users', providerData[0].uid), {
         name: providerData[0].displayName,
         email: providerData[0].email,
         photo: providerData[0].photoURL,
         words: [],
       });
+
       setUser(providerData[0]);
       router.push('/play');
     } catch (error) {
@@ -84,6 +101,7 @@ const SignIn = () => {
       } = await signInWithEmailAndPassword(firebaseAuth, email, password);
       setEmail('');
       setPassword('');
+
       setUser(providerData[0]);
       router.push('/play');
     } catch (error) {
@@ -190,16 +208,6 @@ const SignIn = () => {
             />
             Google
           </button>
-          {/* <button className="w-1/2 h-10 flex items-center gap-3 justify-center bg-[#fefefe] font-medium rounded-md  transition-colors">
-            <Image
-              src={TwitterLogo}
-              alt="Google Logo"
-              className="inline-block"
-              width={26}
-              height={26}
-            />
-            Twitter
-          </button> */}
         </div>
       </form>
     </div>

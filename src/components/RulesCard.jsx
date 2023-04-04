@@ -27,9 +27,9 @@ const RulesCard = ({ setIsRulesOpen, isRulesOpen }) => {
           guess.
         </p>
         <p className="text-white/70 text-xl sm:text-base tracking-tight ">
-          A ❌ means that a letter in the guess is in the correct position,
-          while a ✅ means that a letter in the guess is present in the
-          computers word, but in the wrong position.
+          A ✅means that a letter in the guess is in the correct position, while
+          a ❌ means that a letter in the guess is present in the computers
+          word, but in the wrong position.
         </p>
         <p className="text-white/70 text-xl sm:text-base tracking-tight ">
           The player continues to make guesses until they correctly guess the
