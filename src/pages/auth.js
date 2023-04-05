@@ -84,6 +84,7 @@ const SignIn = () => {
         email: providerData[0].email,
         photo: providerData[0].photoURL,
         words: [],
+        score: 0,
       });
 
       setUser(providerData[0]);

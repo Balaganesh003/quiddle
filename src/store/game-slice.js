@@ -6,6 +6,8 @@ const gameSlice = createSlice({
     choosedWord: '',
     gameError: null,
     remainingChance: 15,
+    scoredPoints: 0,
+
     alreadyPlayedWords: [],
     guessedWords: [],
   },
