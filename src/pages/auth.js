@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import GoogleLogo from '../../public/google-icon.svg';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -28,6 +28,19 @@ const SignIn = () => {
 
   const dispatch = useDispatch();
 
+  const getUser = () => {
+    let user = localStorage.getItem('user');
+    user = JSON.parse(user);
+    if (!user) return;
+    dispatch(authActions.setUser(user));
+    dispatch(authActions.setIsAuthenticated(true));
+    router.push('/play');
+  };
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
   const setUser = (user) => {
     dispatch(authActions.setUser(user));
   };
@@ -38,11 +51,14 @@ const SignIn = () => {
         user: { providerData },
       } = await signInWithPopup(firebaseAuth, provider);
 
+      localStorage.setItem('user', JSON.stringify(providerData[0]));
+
       const docRef = doc(db, 'users', providerData[0].uid);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
         setUser(providerData[0]);
+        dispatch(authActions.setIsAuthenticated(true));
         router.push('/play');
         return;
       }
@@ -55,6 +71,7 @@ const SignIn = () => {
       });
 
       setUser(providerData[0]);
+      dispatch(authActions.setIsAuthenticated(true));
       router.push('/play');
     } catch (error) {
       console.log(error);
@@ -68,6 +85,7 @@ const SignIn = () => {
         user: { providerData },
       } = await createUserWithEmailAndPassword(firebaseAuth, email, password);
       await updateProfile(firebaseAuth.currentUser, { displayName: name });
+      localStorage.setItem('user', JSON.stringify(providerData[0]));
       setEmail('');
       setPassword('');
       setName('');
@@ -76,7 +94,9 @@ const SignIn = () => {
 
       if (docSnap.exists()) {
         setUser(providerData[0]);
+        dispatch(authActions.setIsAuthenticated(true));
         router.push('/play');
+
         return;
       }
       await setDoc(doc(db, 'users', providerData[0].uid), {
@@ -88,6 +108,7 @@ const SignIn = () => {
       });
 
       setUser(providerData[0]);
+      dispatch(authActions.setIsAuthenticated(true));
       router.push('/play');
     } catch (error) {
       console.log(error);
@@ -100,9 +121,10 @@ const SignIn = () => {
       const {
         user: { providerData },
       } = await signInWithEmailAndPassword(firebaseAuth, email, password);
+      localStorage.setItem('user', JSON.stringify(providerData[0]));
       setEmail('');
       setPassword('');
-
+      dispatch(authActions.setIsAuthenticated(true));
       setUser(providerData[0]);
       router.push('/play');
     } catch (error) {

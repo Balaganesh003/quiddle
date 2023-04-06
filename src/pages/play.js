@@ -12,6 +12,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { db } from '../utils/firebase';
 import { useRouter } from 'next/router';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { authActions } from '@/store/auth-slice';
 
 const Play = () => {
   const dispatch = useDispatch();
@@ -33,13 +34,21 @@ const Play = () => {
   const { alreadyPlayedWords, scoredPoints } = useSelector(
     (state) => state.game
   );
-  const { isAuthenticated } = useSelector((state) => state.auth);
 
-  const checkUserAuth = () => {
-    if (!isAuthenticated) {
+  const checkUserAuth = async () => {
+    let user = localStorage.getItem('user');
+    user = JSON.parse(user);
+    if (!user) {
       router.push('/auth');
+      return;
     }
+    dispatch(authActions.setUser(user));
+    dispatch(authActions.setIsAuthenticated(true));
   };
+
+  useEffect(() => {
+    checkUserAuth();
+  }, []);
 
   const getAlreadyPlayedWords = async () => {
     let alreadyPlayedWords = [];
@@ -68,11 +77,11 @@ const Play = () => {
   };
 
   useEffect(() => {
-    checkUserAuth();
+    if (user === null) return;
+    handelChooseWord();
     getAlreadyPlayedWords();
     getScore();
-    handelChooseWord();
-  }, [isWon]);
+  }, [isWon, user]);
 
   const handelChooseWord = () => {
     const word = selectWord();
