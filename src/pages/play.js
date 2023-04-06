@@ -30,7 +30,9 @@ const Play = () => {
   const [correctLettersWithPosition, setCorrectLettersWithPosition] =
     useState(0);
   const [isGuessedCardOpen, setIsGuessedCardOpen] = useState(false);
-  const { alreadyPlayedWords } = useSelector((state) => state.game);
+  const { alreadyPlayedWords, scoredPoints } = useSelector(
+    (state) => state.game
+  );
   const { isAuthenticated } = useSelector((state) => state.auth);
 
   const checkUserAuth = () => {
@@ -58,9 +60,17 @@ const Play = () => {
     }
   };
 
+  const getScore = async () => {
+    const docRef = doc(db, 'users', user.uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.data().score === undefined) return;
+    dispatch(gameActions.setScoredPoints(docSnap.data().score));
+  };
+
   useEffect(() => {
     checkUserAuth();
     getAlreadyPlayedWords();
+    getScore();
     handelChooseWord();
   }, [isWon]);
 
@@ -107,16 +117,15 @@ const Play = () => {
       }
     }
     if (correctLettersWithPosition === choosedWord.length) {
-      handleEndGame();
-
       await setDoc(
         doc(db, 'users', user.uid),
         {
           words: [...alreadyPlayedWords, choosedWord],
+          score: scoredPoints + 1,
         },
         { merge: true }
       );
-
+      handleEndGame();
       toast.success('You Won the Game');
 
       setIsWon(true);

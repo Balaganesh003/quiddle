@@ -4,10 +4,8 @@ const gameSlice = createSlice({
   name: 'game',
   initialState: {
     choosedWord: '',
-    gameError: null,
     remainingChance: 15,
     scoredPoints: 0,
-
     alreadyPlayedWords: [],
     guessedWords: [],
   },
@@ -33,6 +31,9 @@ const gameSlice = createSlice({
     },
     setAlreadyPlayedWords(state, action) {
       state.alreadyPlayedWords = action.payload;
+    },
+    setScoredPoints(state, action) {
+      state.scoredPoints = action.payload;
     },
   },
 });
