@@ -253,7 +253,7 @@ const Play = () => {
           isGuessedCardOpen={isGuessedCardOpen}
           setIsGuessedCardOpen={setIsGuessedCardOpen}
         />
-        <Modal />
+        <Modal isWon={isWon} />
       </div>
     </div>
   );
