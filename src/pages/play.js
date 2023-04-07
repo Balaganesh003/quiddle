@@ -13,6 +13,7 @@ import { db } from '../utils/firebase';
 import { useRouter } from 'next/router';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { authActions } from '@/store/auth-slice';
+import Modal from '@/components/PlayAgain';
 
 const Play = () => {
   const dispatch = useDispatch();
@@ -252,6 +253,7 @@ const Play = () => {
           isGuessedCardOpen={isGuessedCardOpen}
           setIsGuessedCardOpen={setIsGuessedCardOpen}
         />
+        <Modal />
       </div>
     </div>
   );
