@@ -6,7 +6,7 @@ const RulesCard = ({ setIsRulesOpen, isRulesOpen }) => {
     <div
       className={`sm:m-5 rounded-lg sm:w-[20%] w-[90%] ${
         !isRulesOpen && 'hidden '
-      } overflow-hidden pb-4 h-[50%] bottom-1/2 backdrop-blur-lg backdrop-filter-none   translate-y-1/2 left-1/2 -translate-x-1/2 bg-black/20 text-white sm:translate-y-0 sm:translate-x-0 absolute sm:bottom-0 sm:left-0 `}>
+      } overflow-hidden pb-8 sm:pb-5 h-[50%] bottom-1/2 backdrop-blur-lg backdrop-filter-none   translate-y-1/2 left-1/2 -translate-x-1/2 bg-black/20 text-white sm:translate-y-0 sm:translate-x-0 absolute sm:bottom-0 sm:left-0 `}>
       <div className="text-center  rounded-t-lg mb-2 px-2 py-4 sm:py-3 uppercase relative bg-black/[15%]">
         <p className="text-2xl sm:text-xl">Rules</p>
         <p
