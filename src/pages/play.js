@@ -82,13 +82,15 @@ const Play = () => {
     handelChooseWord();
     getAlreadyPlayedWords();
     getScore();
-  }, [isWon, user]);
+  }, [user]);
 
   const handelChooseWord = () => {
     const word = selectWord();
     if (alreadyPlayedWords.includes(word)) {
+      toast.error('Word already played');
       handelChooseWord();
     } else {
+      toast.success('Word Selected');
       dispatch(gameActions.setChoosedWord(word));
     }
   };
@@ -107,11 +109,30 @@ const Play = () => {
     );
   };
 
-  const handleEndGame = () => {
-    setIsGuessing(false);
+  const handleTryAgain = () => {
+    setIsWon(false);
+    setIsGuessing(true);
+    dispatch(gameActions.resetRemainingChance());
+    toast.success('Game Started Again');
+  };
+
+  const handlePlayAgain = () => {
+    console.log('play again');
+    setIsWon(false);
+    setIsGuessing(true);
     dispatch(gameActions.resetRemainingChance());
     dispatch(gameActions.resetGuessedWords());
-    // dispatch(gameActions.resetChooseWord());
+    dispatch(gameActions.resetChooseWord());
+    handelChooseWord();
+    getAlreadyPlayedWords();
+    setCorrectLetters(0);
+    setCorrectLettersWithPosition(0);
+    getScore();
+    toast.success('Your Game has been reset');
+  };
+
+  const handleEndGame = () => {
+    setIsGuessing(false);
   };
 
   const checkWord = async (word) => {
@@ -137,7 +158,6 @@ const Play = () => {
       );
       handleEndGame();
       toast.success('You Won the Game');
-
       setIsWon(true);
     } else {
       AddGuessedWord(guessword, correctLetters, correctLettersWithPosition);
@@ -167,6 +187,7 @@ const Play = () => {
       <div className="relative h-full ">
         <Toaster />
         <div
+          disable={isGuessedCardOpen || isRulesOpen}
           className={`bg-black/10 sm:px-10 p-4  text-white rounded-lg py-5 h-full ${
             (isGuessedCardOpen && 'blur-md') ||
             (isRulesOpen && 'blur-md sm:blur-0')
@@ -253,7 +274,13 @@ const Play = () => {
           isGuessedCardOpen={isGuessedCardOpen}
           setIsGuessedCardOpen={setIsGuessedCardOpen}
         />
-        <Modal isWon={isWon} />
+        {!isGuessing && (
+          <Modal
+            isWon={isWon}
+            handleTryAgain={handleTryAgain}
+            handlePlayAgain={handlePlayAgain}
+          />
+        )}
       </div>
     </div>
   );
