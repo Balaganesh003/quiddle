@@ -86,12 +86,13 @@ const Play = () => {
 
   const handelChooseWord = () => {
     const word = selectWord();
-    if (alreadyPlayedWords.includes(word)) {
-      toast.error('Word already played');
-      handelChooseWord();
-    } else {
-      toast.success('Word Selected');
-      dispatch(gameActions.setChoosedWord(word));
+    if (!alreadyPlayedWords.includes(choosedWord)) {
+      if (alreadyPlayedWords.includes(word)) {
+        handelChooseWord();
+      } else {
+        toast.success('Word Selected');
+        dispatch(gameActions.setChoosedWord(word));
+      }
     }
   };
 
