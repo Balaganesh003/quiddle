@@ -4,7 +4,7 @@ const gameSlice = createSlice({
   name: 'game',
   initialState: {
     choosedWord: '',
-    remainingChance: 15,
+    remainingChance: 2,
     scoredPoints: 0,
     alreadyPlayedWords: [],
     guessedWords: [],
