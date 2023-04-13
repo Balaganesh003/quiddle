@@ -13,7 +13,7 @@ import { db } from '../utils/firebase';
 import { useRouter } from 'next/router';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { authActions } from '@/store/auth-slice';
-import Modal from '@/components/PlayAgain';
+import Modal from '@/components/Modal';
 
 const Play = () => {
   const dispatch = useDispatch();
@@ -73,15 +73,16 @@ const Play = () => {
   const getScore = async () => {
     const docRef = doc(db, 'users', user.uid);
     const docSnap = await getDoc(docRef);
-    if (docSnap.data().score === undefined) return;
+    if (docSnap.data().score == undefined || docSnap.data().score == null)
+      return;
     dispatch(gameActions.setScoredPoints(docSnap.data().score));
   };
 
   useEffect(() => {
     if (user === null) return;
-    handelChooseWord();
-    getAlreadyPlayedWords();
+    // handelChooseWord();
     getScore();
+    getAlreadyPlayedWords();
   }, [user]);
 
   const handelChooseWord = () => {
@@ -118,7 +119,6 @@ const Play = () => {
   };
 
   const handlePlayAgain = () => {
-    console.log('play again');
     setIsWon(false);
     setIsGuessing(true);
     dispatch(gameActions.resetRemainingChance());
@@ -137,17 +137,10 @@ const Play = () => {
   };
 
   const checkWord = async (word) => {
-    let correctLetters = 0;
-    let correctLettersWithPosition = 0;
-    for (let i = 0; i < word.length; i++) {
-      if (choosedWord.includes(word[i])) {
-        if (choosedWord[i] === word[i]) {
-          correctLettersWithPosition++;
-        } else {
-          correctLetters++;
-        }
-      }
-    }
+    const { correctLetters, correctLettersWithPosition } = getWordMatches(
+      word,
+      choosedWord
+    );
     if (correctLettersWithPosition === choosedWord.length) {
       await setDoc(
         doc(db, 'users', user.uid),
@@ -161,11 +154,37 @@ const Play = () => {
       toast.success('You Won the Game');
       setIsWon(true);
     } else {
-      AddGuessedWord(guessword, correctLetters, correctLettersWithPosition);
+      AddGuessedWord(word, correctLetters, correctLettersWithPosition);
       setCorrectLetters(correctLetters);
       setCorrectLettersWithPosition(correctLettersWithPosition);
       dispatch(gameActions.reduceRemainingChance());
     }
+  };
+
+  const getWordMatches = (word1, word2) => {
+    const letterCount = {};
+    let correctLettersWithPosition = 0;
+    let correctLetters = 0;
+
+    for (let i = 0; i < word1.length; i++) {
+      if (word1[i] === word2[i]) {
+        correctLettersWithPosition++;
+      } else {
+        letterCount[word1[i]] = (letterCount[word1[i]] || 0) + 1;
+      }
+    }
+
+    for (let i = 0; i < word2.length; i++) {
+      if (word1[i] !== word2[i] && letterCount[word2[i]]) {
+        correctLetters++;
+        letterCount[word2[i]]--;
+      }
+    }
+
+    return {
+      correctLettersWithPosition,
+      correctLetters,
+    };
   };
 
   const handleGuess = (e) => {
@@ -277,6 +296,7 @@ const Play = () => {
         />
         {!isGuessing && (
           <Modal
+            choosedWord={choosedWord}
             isWon={isWon}
             handleTryAgain={handleTryAgain}
             handlePlayAgain={handlePlayAgain}
