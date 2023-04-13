@@ -32,7 +32,7 @@ const Play = () => {
   const [correctLettersWithPosition, setCorrectLettersWithPosition] =
     useState(0);
   const [isGuessedCardOpen, setIsGuessedCardOpen] = useState(false);
-  const { alreadyPlayedWords, scoredPoints } = useSelector(
+  const { alreadyPlayedWords, scoredPoints, guessedWords } = useSelector(
     (state) => state.game
   );
 
@@ -80,20 +80,28 @@ const Play = () => {
 
   useEffect(() => {
     if (user === null) return;
-    // handelChooseWord();
-    getScore();
-    getAlreadyPlayedWords();
+
+    const fetchData = async () => {
+      try {
+        await getScore();
+        await getAlreadyPlayedWords();
+        handelChooseWord();
+      } catch (error) {
+        toast.error('Something went wrong While Fetching Data');
+        window.location.reload();
+      }
+    };
+
+    fetchData();
   }, [user]);
 
   const handelChooseWord = () => {
     const word = selectWord();
-    if (!alreadyPlayedWords.includes(choosedWord)) {
-      if (alreadyPlayedWords.includes(word)) {
-        handelChooseWord();
-      } else {
-        toast.success('Word Selected');
-        dispatch(gameActions.setChoosedWord(word));
-      }
+    if (alreadyPlayedWords.includes(word)) {
+      handelChooseWord();
+    } else {
+      toast.success('Word Selected');
+      dispatch(gameActions.setChoosedWord(word));
     }
   };
 
@@ -111,6 +119,17 @@ const Play = () => {
     );
   };
 
+  const checkRepeatedWord = (word) => {
+    let repeatedWord = false;
+    guessedWords.forEach((guessedWord) => {
+      if (guessedWord.guessedWord === word) {
+        repeatedWord = true;
+        return null;
+      }
+    });
+    return repeatedWord;
+  };
+
   const handleTryAgain = () => {
     setIsWon(false);
     setIsGuessing(true);
@@ -118,17 +137,17 @@ const Play = () => {
     toast.success('Game Started Again');
   };
 
-  const handlePlayAgain = () => {
+  const handlePlayAgain = async () => {
     setIsWon(false);
     setIsGuessing(true);
     dispatch(gameActions.resetRemainingChance());
     dispatch(gameActions.resetGuessedWords());
     dispatch(gameActions.resetChooseWord());
+    await getAlreadyPlayedWords();
+    await getScore();
     handelChooseWord();
-    getAlreadyPlayedWords();
     setCorrectLetters(0);
     setCorrectLettersWithPosition(0);
-    getScore();
     toast.success('Your Game has been reset');
   };
 
@@ -137,6 +156,10 @@ const Play = () => {
   };
 
   const checkWord = async (word) => {
+    if (checkRepeatedWord(word)) {
+      toast.error('You have already Entered this word');
+      return;
+    }
     const { correctLetters, correctLettersWithPosition } = getWordMatches(
       word,
       choosedWord
@@ -189,10 +212,6 @@ const Play = () => {
 
   const handleGuess = (e) => {
     e.preventDefault();
-    if (guessword.length !== 4) {
-      toast.error('Please enter 4 letter word');
-      return;
-    }
     checkWord(guessword.toLocaleLowerCase());
     if (remainingChance === 1) {
       handleEndGame();
@@ -207,7 +226,6 @@ const Play = () => {
       <div className="relative h-full ">
         <Toaster />
         <div
-          disable={isGuessedCardOpen || isRulesOpen}
           className={`bg-black/10 sm:px-10 p-4  text-white rounded-lg py-5 h-full ${
             (isGuessedCardOpen && 'blur-md') ||
             (isRulesOpen && 'blur-md sm:blur-0')
