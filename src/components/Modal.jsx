@@ -30,20 +30,22 @@ const Modal = ({ isWon, handlePlayAgain, handleTryAgain, choosedWord }) => {
               <h3 className="text-lg leading-6 font-medium text-gray-900">
                 {isWon ? 'Won the Game😇😇' : `Lost the game😭😭 `}
               </h3>
-              <div
-                className="cursor-pointer mt-2 flex items-center justify-center space-x-2"
-                onClick={() => setShow(true)}>
-                {show ? (
-                  <p>
-                    The word is
-                    <span className="ml-2 uppercase font-bold text-xl underline shadow-lg">
-                      {choosedWord}
-                    </span>
-                  </p>
-                ) : (
-                  <p>Tap To Show The Word</p>
-                )}
-              </div>
+              {!isWon && (
+                <div
+                  className="cursor-pointer mt-2 flex items-center justify-center space-x-2"
+                  onClick={() => setShow(true)}>
+                  {show ? (
+                    <p>
+                      The word is
+                      <span className="ml-2 uppercase font-bold text-xl underline shadow-lg">
+                        {choosedWord}
+                      </span>
+                    </p>
+                  ) : (
+                    <p>Tap To Show The Word</p>
+                  )}
+                </div>
+              )}
             </div>
           </div>
           <div className="mt-5 sm:mt-6 flex flex-col sm:flex-row justify-center items-center w-full gap-10 px-5">
