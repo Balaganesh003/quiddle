@@ -80,7 +80,7 @@ const Play = () => {
 
   useEffect(() => {
     if (user === null) return;
-    handelChooseWord();
+    // handelChooseWord();
     getScore();
     getAlreadyPlayedWords();
   }, [user]);
@@ -119,7 +119,6 @@ const Play = () => {
   };
 
   const handlePlayAgain = () => {
-    console.log('play again');
     setIsWon(false);
     setIsGuessing(true);
     dispatch(gameActions.resetRemainingChance());
@@ -163,24 +162,29 @@ const Play = () => {
   };
 
   const getWordMatches = (word1, word2) => {
-    let correctLetters = 0;
+    const letterCount = {};
     let correctLettersWithPosition = 0;
-    const usedIndices = new Set();
+    let correctLetters = 0;
 
     for (let i = 0; i < word1.length; i++) {
-      const char = word1[i];
-      if (word2.includes(char)) {
-        const index = word2.indexOf(char);
-        if (index === i) {
-          correctLettersWithPosition++;
-        } else if (!usedIndices.has(index)) {
-          correctLetters++;
-          usedIndices.add(index);
-        }
+      if (word1[i] === word2[i]) {
+        correctLettersWithPosition++;
+      } else {
+        letterCount[word1[i]] = (letterCount[word1[i]] || 0) + 1;
       }
     }
 
-    return { correctLetters, correctLettersWithPosition };
+    for (let i = 0; i < word2.length; i++) {
+      if (word1[i] !== word2[i] && letterCount[word2[i]]) {
+        correctLetters++;
+        letterCount[word2[i]]--;
+      }
+    }
+
+    return {
+      correctLettersWithPosition,
+      correctLetters,
+    };
   };
 
   const handleGuess = (e) => {
