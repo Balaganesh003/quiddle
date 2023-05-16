@@ -27,13 +27,13 @@ const Play = () => {
   const [isGuessing, setIsGuessing] = useState(true);
   const [isWon, setIsWon] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
-  const { name } = useSelector((state) => state.auth);
+  const { name } = useSelector((state) => state?.auth);
   const [correctLetters, setCorrectLetters] = useState(0);
   const [correctLettersWithPosition, setCorrectLettersWithPosition] =
     useState(0);
   const [isGuessedCardOpen, setIsGuessedCardOpen] = useState(false);
   const { alreadyPlayedWords, scoredPoints, guessedWords } = useSelector(
-    (state) => state.game
+    (state) => state?.game
   );
 
   const checkUserAuth = async () => {
@@ -66,6 +66,7 @@ const Play = () => {
       });
       dispatch(gameActions.setAlreadyPlayedWords(alreadyPlayedWords));
     } catch (error) {
+      console.log(error);
       toast.error('Something went wrong');
     }
   };
@@ -88,10 +89,10 @@ const Play = () => {
         handelChooseWord();
       } catch (error) {
         toast.error('Something went wrong While Fetching Data');
+        console.log(error);
         window.location.reload();
       }
     };
-
     fetchData();
   }, [user]);
 
